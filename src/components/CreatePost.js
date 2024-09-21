@@ -7,6 +7,8 @@ import toast from "react-hot-toast"
 import { useSelector, useDispatch } from "react-redux";
 import { getAllTweets, getIsActive, getRefresh } from '../redux/tweetSlice';
 
+
+
 const CreatePost = () => {
     const [description, setDescription] = useState("");
     const { user } = useSelector(store => store.user);
@@ -14,11 +16,13 @@ const CreatePost = () => {
     const dispatch = useDispatch();
 
     const submitHandler = async () => {
+        const token = localStorage.getItem('token'); // or however you store your token
 
         try {
             const res = await axios.post(`${TWEET_API_END_POINT}/create`, { description, id: user?._id }, {
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                     'Authorization': `Bearer ${token}`
                 },
                 withCredentials: true
             });
