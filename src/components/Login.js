@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant";
 import toast from "react-hot-toast";
-import {useNavigate} from "react-router-dom";
-import {useDispatch} from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getUser } from '../redux/userSlice';
 
 const Login = () => {
@@ -25,9 +25,9 @@ const Login = () => {
             'Content-Type': "application/json"
           },
           withCredentials: true
-        }); 
+        });
         dispatch(getUser(res?.data?.user));
-        if(res.data.success){
+        if (res.data.success) {
           navigate("/");
           toast.success(res.data.message);
         }
@@ -43,8 +43,8 @@ const Login = () => {
             'Content-Type': "application/json"
           },
           withCredentials: true
-        }); 
-        if(res.data.success){
+        });
+        if (res.data.success) {
           setIsLogin(true);
           toast.success(res.data.message);
         }
