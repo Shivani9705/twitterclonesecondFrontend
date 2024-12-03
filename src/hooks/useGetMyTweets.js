@@ -1,42 +1,46 @@
 import axios from "axios";
 import { TWEET_API_END_POINT } from "../utils/constant";
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllTweets } from "../redux/tweetSlice";
 
 const useGetMyTweets = (id) => {
     const dispatch = useDispatch();
-    const { refresh, isActive } = useSelector(store => store.tweet);
-    
+    const { refresh, isActive } = useSelector((store) => store.tweet);
 
-    const fetchMyTweets = async () => {
+    // Memoize fetchMyTweets to avoid recreating on each render
+    const fetchMyTweets = useCallback(async () => {
         try {
             const res = await axios.get(`${TWEET_API_END_POINT}/alltweets/${id}`, {
-                withCredentials: true
+                withCredentials: true,
             });
             console.log(res);
             dispatch(getAllTweets(res.data.tweets));
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
-    }
-    const followingTweetHandler = async () => { 
+    }, [dispatch, id]); // Include dependencies that change the behavior of this function
+
+    // Memoize followingTweetHandler to avoid recreating on each render
+    const followingTweetHandler = useCallback(async () => {
         try {
             axios.defaults.withCredentials = true;
             const res = await axios.get(`${TWEET_API_END_POINT}/followingtweets/${id}`);
             console.log(res);
             dispatch(getAllTweets(res.data.tweets));
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
-    }
+    }, [dispatch, id]);
 
+    // useEffect with stable dependencies
     useEffect(() => {
-        if(isActive){
+        if (isActive) {
             fetchMyTweets();
-        }else{
+        } else {
             followingTweetHandler();
         }
-    }, [id,isActive,refresh,fetchMyTweets,followingTweetHandler]);
+    }, [isActive, fetchMyTweets, followingTweetHandler, refresh]); // Dependencies ensure useEffect runs correctly
 };
+
 export default useGetMyTweets;
