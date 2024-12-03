@@ -2,14 +2,18 @@ import axios from "axios";
 import { USER_API_END_POINT } from "../utils/constant";
 import { useEffect } from "react";
 import {useDispatch} from "react-redux";
-import { getMyProfile, getOtherUsers } from "../redux/userSlice";
+import { getOtherUsers } from "../redux/userSlice";
 
 const useOtherUsers = (id) => {
     const dispatch = useDispatch();
     useEffect(()=>{
         const fetchOtherUsers = async () => {
             try {
+                const token = localStorage.getItem("authToken"); // Example
                 const res = await axios.get(`${USER_API_END_POINT}/otheruser/${id}`,{
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
                     withCredentials:true
                 });
                 console.log(res);
@@ -19,6 +23,6 @@ const useOtherUsers = (id) => {
             }
         }
         fetchOtherUsers();
-    },[]);
+    },[id,dispatch]);
 };
 export default useOtherUsers;

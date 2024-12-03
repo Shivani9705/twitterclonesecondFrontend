@@ -37,6 +37,6 @@ const useGetMyTweets = (id) => {
         }else{
             followingTweetHandler();
         }
-    }, [isActive,refresh]);
+    }, [id,isActive,refresh,fetchMyTweets,followingTweetHandler]);
 };
 export default useGetMyTweets;
