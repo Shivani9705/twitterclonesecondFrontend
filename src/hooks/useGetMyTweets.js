@@ -10,6 +10,18 @@ const useGetMyTweets = (id) => {
 
     // Memoize fetchMyTweets to avoid recreating on each render
     const fetchMyTweets = useCallback(async () => {
+        const userId = getUserIdFromState(); // Get user ID from state, props, or a method
+        if (!userId) {
+            console.error("User ID is missing");
+            return;
+        }
+
+        const authToken = localStorage.getItem("authToken");
+        if (!authToken) {
+            console.error("Authentication token is missing");
+            return;
+        }
+
         try {
             const res = await axios.get(`${TWEET_API_END_POINT}/alltweets/${id}`, {
                 withCredentials: true,

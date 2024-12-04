@@ -3,27 +3,56 @@ export const TWEET_API_END_POINT = "https://backend-deployment-2-8bir.onrender.c
 // export const USER_API_END_POINT = "http://localhost:8080/api/v1/user";
 // export const TWEET_API_END_POINT = "http://localhost:8080/api/v1/tweet";
 
-export const timeSince = (timestamp) => {
-    let time = Date.parse(timestamp);
-    let now = Date.now();
-    let secondsPast = (now - time) / 1000;
-    let suffix = 'ago';
+// export const timeSince = (timestamp) => {
+//     let time = Date.parse(timestamp);
+//     let now = Date.now();
+//     let secondsPast = (now - time) / 1000;
+//     let suffix = 'ago';
 
-    let intervals = {
+//     let intervals = {
+//         year: 31536000,
+//         month: 2592000,
+//         week: 604800,
+//         day: 86400,
+//         hour: 3600,
+//         minute: 60,
+//         second: 1
+//     };
+
+//     for (let i in intervals) {
+//         let interval = intervals[i];
+//         if (secondsPast >= interval) {
+//             let count = Math.floor(secondsPast / interval);
+//             return `${count} ${i} ${count > 1 ? 's' : ''} ${suffix}`;
+//         }
+//     }
+// }
+export const timeSince = (timestamp) => {
+    const time = Date.parse(timestamp);
+    const now = Date.now();
+    const secondsPast = Math.floor((now - time) / 1000);
+    const suffix = 'ago';
+
+    if (isNaN(time)) {
+        return "Invalid date"; // Handle invalid timestamp
+    }
+
+    const intervals = {
         year: 31536000,
         month: 2592000,
         week: 604800,
         day: 86400,
         hour: 3600,
         minute: 60,
-        second: 1
+        second: 1,
     };
 
-    for (let i in intervals) {
-        let interval = intervals[i];
+    for (const [unit, interval] of Object.entries(intervals)) {
         if (secondsPast >= interval) {
-            let count = Math.floor(secondsPast / interval);
-            return `${count} ${i} ${count > 1 ? 's' : ''} ${suffix}`;
+            const count = Math.floor(secondsPast / interval);
+            return `${count} ${unit}${count > 1 ? 's' : ''} ${suffix}`;
         }
     }
-}
+
+    return "Just now"; // For cases where the difference is less than a second
+};
