@@ -15,12 +15,6 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // Logout handler for clearing token
-  const logoutHandler = () => {
-    localStorage.removeItem('authToken');
-    console.log('Logged out: Token removed');
-  };
-
   const submitHandler = async (e) => {
     e.preventDefault();
     if (isLogin) {
