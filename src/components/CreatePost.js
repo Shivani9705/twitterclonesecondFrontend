@@ -15,27 +15,66 @@ const CreatePost = () => {
     const {isActive} = useSelector(store=>store.tweet);
     const dispatch = useDispatch();
 
-    const submitHandler = async () => {
-        // const token = localStorage.getItem('token'); // or however you store your token
+    // const submitHandler = async () => {
+    //     // const token = localStorage.getItem('token'); // or however you store your token
 
+    //     try {
+    //         const res = await axios.post(`${TWEET_API_END_POINT}/create`, { description, id: user?._id }, {
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 //  'Authorization': `Bearer ${token}`
+    //             },
+    //             withCredentials: true
+    //         });
+    //         dispatch(getRefresh());
+    //         if (res.data.success) {
+    //             toast.success(res.data.message);
+    //         }
+    //     } catch (error) {
+    //         toast.error(error.response.data.message);
+    //         console.log(error);
+    //     }
+    //     setDescription("");
+    // }
+    const submitHandler = async () => {
         try {
-            const res = await axios.post(`${TWEET_API_END_POINT}/create`, { description, id: user?._id }, {
-                headers: {
-                    "Content-Type": "application/json",
-                    //  'Authorization': `Bearer ${token}`
-                },
-                withCredentials: true
-            });
+            // Retrieve the token
+            const token = localStorage.getItem('authToken'); 
+            console.log("Token retrieved:", token); 
+    
+            // Handle missing token
+            if (!token) {
+                toast.error("Authentication token is missing! Please log in again.");
+                console.error("Authentication token is missing!");
+                return;
+            }
+    
+            // Make the API request
+            const res = await axios.post(
+                `${TWEET_API_END_POINT}/create`,
+                { description, id: user?._id },
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                    withCredentials: true
+                }
+            );
+    
             dispatch(getRefresh());
             if (res.data.success) {
                 toast.success(res.data.message);
             }
         } catch (error) {
-            toast.error(error.response.data.message);
-            console.log(error);
+            console.error("Error:", error.response?.data || error.message);
+            toast.error(error.response?.data?.message || "Something went wrong!");
         }
+    
+        // Reset the description field
         setDescription("");
-    }
+    };
+    
 
     const forYouHandler = () => {
          dispatch(getIsActive(true));
