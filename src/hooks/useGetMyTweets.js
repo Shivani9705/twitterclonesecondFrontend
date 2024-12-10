@@ -15,7 +15,7 @@ const useGetMyTweets = (id) => {
     const setAuthToken = () => {
         const authToken = localStorage.getItem("authToken");
         if (!authToken) {
-            console.error("Authentication token is missing");
+            console.log("Authentication token is missing");
             return false;
         }
         axios.defaults.headers.common["Authorization"] = `Bearer ${authToken}`;
@@ -25,7 +25,7 @@ const useGetMyTweets = (id) => {
     // Fetch the user's tweets
     const fetchMyTweets = useCallback(async () => {
         if (!id) {
-            console.error("User ID is missing");
+            console.log("User ID is missing");
             return;
         }
 
@@ -38,6 +38,7 @@ const useGetMyTweets = (id) => {
             const res = await axios.get(`${TWEET_API_END_POINT}/alltweets/${id}`, {
                 withCredentials: true,
             });
+            console.log(res)
             dispatch(getAllTweets(res.data.tweets));
         } catch (err) {
             setError(err.response ? err.response.data : err.message);

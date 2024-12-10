@@ -36,7 +36,7 @@ const LeftSidebar = () => {
             // Show success toast message
             toast.success(res.data.message);
         } catch (error) {
-            console.error("Logout failed:", error);
+            console.log("Logout failed:", error);
             toast.error(error.response?.data?.message || "Something went wrong!");
         }
     };

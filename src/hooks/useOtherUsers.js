@@ -4,6 +4,12 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getOtherUsers } from "../redux/userSlice";
 
+
+const getCookie = (name) => {
+    const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
+    return match ? match[2] : null;
+};
+
 const useOtherUsers = (id) => {
     const dispatch = useDispatch();
 
@@ -11,11 +17,12 @@ const useOtherUsers = (id) => {
         const fetchOtherUsers = async () => {
             try {
                 // Retrieve token from localStorage
-                const token = localStorage.getItem("authToken");
+                const token = getCookie("authToken");
+                // const token = localStorage.getItem("authToken");
 
                 // Check if the token is missing
                 if (!token) {
-                    console.error("Authentication token is missing!");
+                    console.log("Authentication token is missing!");
                     return; // Exit the function early
                 }
 
